@@ -1,0 +1,221 @@
+<p-card header="Recherche" styleClass="mb-1 p-card-sm ">
+    <ng-template pTemplate="left">
+        <div class="row mb-1">
+            <div class="col-lg-3">
+                <input type="text" placeholder="Nom" pInputText [(ngModel)]="bodySearch.name" />
+            </div>
+            <div class="col-lg-3">
+                <input type="text" placeholder="Téléphone" pInputText [(ngModel)]="bodySearch.phone" />
+            </div>
+            <div class="col-lg-3">
+                <input type="text" placeholder="Email" pInputText [(ngModel)]="bodySearch.email" />
+            </div>
+            <div class="col-lg-3">
+                <p-dropdown [options]="entrepriseTypes" [(ngModel)]="bodySearch.type_entreprise" [showClear]="true" placeholder="Choisi un client" optionLabel="name" optionValue="id" [filter]="true" filterBy="name"></p-dropdown>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p-button label="Rechercher" icon="pi pi-search" (click)="searching()"></p-button>
+            </div>
+        </div>
+    </ng-template>
+</p-card>
+
+<p-toolbar styleClass="mb-1 p-toolbar-sm">
+    <ng-template pTemplate="left">
+        <p-button label="Noveaux" icon="pi pi-plus" class="p-mr-2" styleClass="p-button-success " (click)="onEdit()"></p-button>
+    </ng-template>
+</p-toolbar>
+
+<p-table [value]="entreprises" [lazy]="true" (onLazyLoad)="searching($event)" dataKey="id" styleClass="p-datatable p-datatable-sm  p-component" [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" sortField="entreprises.name"
+    sortOrder="-1" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="email">Email
+                <p-sortIcon field="email"></p-sortIcon>
+            </th>
+            <th pSortableColumn="name">Name
+                <p-sortIcon field="name"></p-sortIcon>
+            </th>
+            <th pSortableColumn="phone">Téléphone
+                <p-sortIcon field="phone"></p-sortIcon>
+            </th>
+            <th pSortableColumn="address">Address
+                <p-sortIcon field="address"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cities.id">Ville
+                <p-sortIcon field="city"></p-sortIcon>
+            </th>
+            <th pSortableColumn="type_entreprise">Type entreprise
+                <p-sortIcon field="type_entreprise"></p-sortIcon>
+            </th>
+            <th pSortableColumn="form_juridique">Form juridique
+                <p-sortIcon field="form_juridique"></p-sortIcon>
+            </th>
+            <th style="width:12rem"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-enteprise let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="role">
+            <td>{{enteprise.email}}</td>
+            <td>{{enteprise.name}}</td>
+            <td> {{enteprise.phone}}</td>
+            <td> {{enteprise.address}}</td>
+            <td> {{enteprise.city}}</td>
+            <td> {{enteprise.type_entreprise}}</td>
+            <td> {{enteprise.form_juridique}}</td>
+            <td style="text-align:center">
+                <button pButton pRipple type="button" pInitEditableRow icon="pi pi-user-edit" pTooltip="Modifer" (click)="onEdit(enteprise)" class="p-button-rounded p-button-sm  p-button-success p-mr-2"></button>
+                <button pButton pRipple type="button" pInitEditableRow icon="pi pi-tags" *ngIf="enteprise.type_entreprise=='client'" pTooltip="Associer fournisseur" (click)="onEditClientProviderAssocier(enteprise);" class="p-button-rounded p-button-sm p-button-success p-mr-2"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-sm p-button-warning" pTooltip="Supprime" (click)="onEntrepriseDelete(enteprise)"></button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-confirmPopup acceptLabel="Oui" rejectLabel="Non"></p-confirmPopup>
+<p-toast position="bottom-right"></p-toast>
+
+<p-dialog [(visible)]="showEntrepriseFormDialog" [style]="{width: '650px',height:'auto'}" header="Details entreprise" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form class="" [formGroup]="formEntreprise">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name"> Nom </label>
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-info-circle"></i>
+                            <input type="text" pInputText formControlName="name" />
+                        </span>
+                        <!--<span class="p-input-icon-right">
+                                <i class="pi pi-angle-down"></i>
+                                  <select class="p-inputtext" formControlName="id_country" (change)="onChangeConntry($event.target.value)">
+                                    <option *ngFor="let conutry of countries" value="{{ conutry.id }}">{{ conutry.name }}</option>
+                                  </select>
+                        </span>-->
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name">Email</label>
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-envelope"></i>
+                            <input type="text" pInputText formControlName="email" />
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name">Téléphone</label>
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-phone"></i>
+                            <input type="text" pInputText formControlName="phone" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-12">
+                    <div class="p-field">
+                        <label for="name">Adresse</label>
+                        <span class="p-input-icon-right">
+                                <i class="pi pi-map-marker"></i>
+                                <input type="text" pInputText formControlName="address" />
+                            </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-6">
+                    <div class="p-field">
+                        <label for="name"> Pays</label>
+                        <span class="p-input-icon-right">
+                                <i class="pi pi-angle-down"></i>
+                                  <select class="p-inputtext" formControlName="id_country" (change)="onChangeConntry($event.target.value)">
+                                    <option *ngFor="let conutry of countries" value="{{ conutry.id }}">{{ conutry.name }}</option>
+                                  </select>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="p-field">
+                        <label for="name">Ville</label>
+                        <span class="p-input-icon-right">
+                                  <i class="pi pi-angle-down"></i>
+                                  <select class=" p-inputtext" formControlName="id_city" >
+                                    <option *ngFor="let city of cities" value="{{ city.id }}">{{ city.name }}</option>
+                                  </select>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name">Registe de commerce </label>
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-microsoft"></i>
+                            <input type="text" pInputText formControlName="rc" />
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name">Type entreprise</label>
+                        <span class="p-input-icon-right">
+                            <i class="pi pi-angle-down"></i>
+                            <select class="p-inputtext" formControlName="type_entreprise" >
+                                <option *ngFor="let type of entrepriseTypes" value="{{ type.name }}">{{ type.name }}</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="p-field">
+                        <label for="name">Format juridique</label>
+                        <span class="p-input-icon-right">
+                            <i class="pi  pi-angle-down"></i>
+                            <select class="p-inputtext" formControlName="form_juridique" >
+                                <option *ngFor="let form of entrepriseForms" value="{{ form.id }}">{{ form.name }}</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="showEntrepriseFormDialog=false"></button>
+        <button pButton pRipple label="Sauvegarder" icon="pi pi-check" class="p-button-text" (click)='isNewEntreprise ? create() : update()'></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showAssocierCLientToProviderDialog" [style]="{width: '650px',height:'auto'}" header="Details entreprise" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form class="" [formGroup]="formClientProvder">
+
+            <div class="row mb-2">
+                <div class="col-lg-12">
+                    <div class="p-field">
+                        <label for="name"> Associer founisseur au client</label>
+                        <p-listbox [options]="listProvider" formControlName="ids_providers" optionLabel="name" optionLabel="name" optionValue="id" [metaKeySelection]="false" [checkbox]="true" [filter]="true" [multiple]="true"></p-listbox>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="formClientProvder.reset();showAssocierCLientToProviderDialog=false"></button>
+        <button pButton pRipple label="Sauvegarder" icon="pi pi-check" class="p-button-text" (click)='associateProvider()'></button>
+    </ng-template>
+</p-dialog>

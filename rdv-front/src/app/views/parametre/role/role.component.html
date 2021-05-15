@@ -1,0 +1,72 @@
+
+
+<p-card header="Recherche" styleClass="mb-1 p-card-sm " >
+          <ng-template pTemplate="left">
+            <div class="row mb-1" >
+              <div class="col-lg-12">
+                      <input type="text" placeholder="Nom de role" pInputText  [(ngModel)]="bodySearch.name" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <p-button label="Rechercher" icon="pi pi-search" (click)="search()"></p-button>
+              </div>
+            </div>
+          </ng-template>
+</p-card>
+
+<p-toolbar styleClass="mb-1 p-toolbar-sm"  >
+        <ng-template pTemplate="left">
+          <p-button label="Noveaux" icon="pi pi-plus" class="p-mr-2" styleClass="p-button-success" (click)="openNew()"></p-button>
+        </ng-template>
+</p-toolbar>
+
+<p-table [value]="roles" [lazy]="true" (onLazyLoad)="search($event)" dataKey="id" editMode="row" styleClass="p-datatable p-datatable-sm  p-component"
+        [paginator]="true" [rows]="10" [totalRecords]="totalRecords" [loading]="loading" sortField="name" sortOrder="-1"  [showCurrentPageReport]="true"
+         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[10,25,50]">
+        <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="name">Nom <p-sortIcon field="name"></p-sortIcon></th>
+              <th style="width:8rem"></th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-role let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="role">
+                  <td>
+                      <p-cellEditor>
+                          <ng-template pTemplate="input">
+                                <div [formGroup]="roleUpdateForm">
+                                      <input pInputText type="text" pTooltip="Enter le nom" formControlName="name">
+                                </div>
+                          </ng-template>
+                          <ng-template pTemplate="output">
+                            {{role.name}}
+                          </ng-template>
+                      </p-cellEditor>
+                  </td>
+                  <td style="text-align:center">
+                      <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(role)" class="p-button-rounded p-button-success p-mr-2"></button>
+                      <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(role)" class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+                      <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(role, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="onRoleDelete(role)"></button>
+                  </td>
+            </tr>
+        </ng-template>
+    </p-table>
+
+    <p-confirmPopup></p-confirmPopup>
+    <p-toast position="bottom-right"></p-toast>
+
+    <p-dialog [(visible)]="newRoleDialogueVisible" [style]="{width: '450px'}" header="Details rôle" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div class="p-field" [formGroup]="formCreateRole">
+            <label for="name">Nom de rôle</label>
+            <input type="text" pInputText id="name"  formControlName="name" autofocus />
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Annuler" icon="pi pi-times" class="p-button-text" (click)="newRoleDialogueVisible=false"></button>
+        <button pButton pRipple label="Sauvegarder" icon="pi pi-check" class="p-button-text" (click)="create(); newRoleDialogueVisible=false"></button>
+    </ng-template>
+</p-dialog>

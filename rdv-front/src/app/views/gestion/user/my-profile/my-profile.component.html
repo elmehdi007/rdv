@@ -1,0 +1,136 @@
+<p-card header="Modifier mon profile">
+    <form class="" [formGroup]="formUpdateUser">
+                  <div class="row mb-2">
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name"> Pays</label>
+                                  <span class="p-input-icon-right">
+                                    <i class="pi pi-angle-down"></i>
+                                      <select class="p-inputtext" formControlName="id_country" (change)="onChangeConntry($event.target.value)">
+                                        <option *ngFor="let conutry of countries" value="{{ conutry.id }}">{{ conutry.name }}</option>
+                                      </select>
+                                  </span>
+                              </div>
+                        </div>
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name">Ville</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-angle-down"></i>
+                                      <select class=" p-inputtext" formControlName="id_city" >
+                                        <option *ngFor="let city of cities" value="{{ city.id }}">{{ city.name }}</option>
+                                      </select>
+                                  </span>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="row mb-2">
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name" class="p-inputtext-sm">Nom</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-user"></i>
+                                      <input type="text" pInputText formControlName="lname"/>
+                                  </span>
+                              </div>
+                        </div>
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name">Prenom</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-user"></i>
+                                      <input type="text" pInputText formControlName="fname"/>
+                                  </span>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="row mb-2">
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name" class="p-inputtext-sm">Téléphone</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-phone"></i>
+                                      <input type="text" pInputText formControlName="phone" />
+                                  </span>
+                              </div>
+                        </div>
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name">Email</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-envelope"></i>
+                                      <input type="text" pInputText formControlName="email" />
+                                  </span>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="row mb-2">
+                        <div class="col-lg-12">
+                              <div class="p-field" >
+                                  <label for="name">Adresse</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-user"></i>
+                                      <span class="p-input-icon-right">
+                                          <i class="pi pi-user"></i>
+                                          <input type="text" pInputText formControlName="address" />
+                                      </span>
+                                  </span>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="row mb-2">
+                        <div class="col-lg-6">
+                              <div class="p-field" >
+                                  <label for="name">Date de naissance</label>
+                                  <p-calendar  styleClass="p-calendar-sm" dateFormat="yy/mm/dd"
+                                   [focusTrap]="false"  [disabledDates]="invalidDates" formControlName="date_birth"
+                                   [showIcon]="true"  styleClass="p-datepicker-current-day p-calendar-sm" ></p-calendar>
+                              </div>
+                        </div>
+                        <div class="col-lg-6" *ngIf="isNewUser">
+                              <div class="p-field" >
+                                  <label for="name">Mot de passe</label>
+                                  <span class="p-input-icon-right">
+                                      <i class="pi pi-user"></i>
+                                      <input pPassword type="password" strongLabel="fort" mediumLabel="medium" weakLabel="faible" promptLabel="saissi mot de passe" formControlName="password"/>
+                                  </span>
+                                  <p-button  label="Générer mot de passe" icon="pi pi-check" iconPos="left" (click)="genererPswrd()"></p-button>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="row mt-4">
+                        <div class="col-lg-6">
+                          <p-fileUpload #avatarUpload name="avatar"  [customUpload]="true" chooseLabel="Choisir" uploadLabel="Modifier" cancelLabel="Annuler" maxFileSize="1000000" (uploadHandler)="uploadMyAvatar($event)">
+                          </p-fileUpload>
+                        </div>
+                  </div>
+
+                  <div class="row mt-4">
+                        <div class="col-lg-6">
+                              <p-button label="Sauvegarder" icon="pi pi-cloud-upload" (click)="update()"></p-button>
+                        </div>
+                  </div>
+    </form>
+    <div class="row mt-5">
+          <div class="col-lg-6">
+                <label>Mes rôles: {{myRolesS}}</label>
+                <div class="row" *ngFor="let role of myRoles" >
+                        <div class="col-lg-6">
+                                    <label for="name">{{role.name}}  </label>
+                        </div>
+                        <div class="col-lg-6">
+                                <div class="p-field" >
+                                        <p-inputSwitch [readonly]="true" [disabled]="true" [(ngModel)]="role.state" ></p-inputSwitch>
+                                </div>
+                        </div>
+                </div>
+          </div>
+    </div>
+</p-card>
+
+<p-toast position="bottom-right"></p-toast>

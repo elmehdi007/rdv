@@ -1,0 +1,20 @@
+:host ::ng-deep *:focus,
+:host ::ng-deep .p-button.p-button-success:enabled:focus,
+.p-buttonset.p-button-success>.p-button:enabled:focus,
+.p-splitbutton.p-button-success>.p-button:enabled:focus {
+    box-shadow: none !important;
+}
+
+:host::ng-deep.p-datepicker table td {
+    padding: 0 !important;
+}
+
+:host::ng-deep.p-sidebar.p-sidebar-transparent {
+    padding: 0 !important;
+    background: rgba(0, 0, 0, 0.21);
+    background-color: rgba(0, 0, 0, 0.21);
+}
+
+.cell-p-table {
+    word-wrap: break-word;
+}
